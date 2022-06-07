@@ -5,6 +5,7 @@ package main
 import (
 	// formataçao (impressão e formatação de saidas)
 	"fmt"
+	"net/http"
 	"os"
 	"reflect"
 )
@@ -17,7 +18,7 @@ func main() {
 	comando := leComando()
 	switch comando {
 	case 1:
-		fmt.Println("Monitoramento iniciado")
+		iniciarMonitoramento()
 	case 2:
 		fmt.Println("Carregando logs")
 	case 3:
@@ -62,4 +63,21 @@ func sairDoPrograma() {
 func erro() {
 	fmt.Println("Comando digitado diferente das opções listadas")
 	os.Exit(-1)
+}
+func iniciarMonitoramento() {
+
+	for {
+		fmt.Println("Monitoramento iniciado")
+		site := "https://random-status-code.herokuapp.com/"
+		http.Get(site)
+		//operador _ inativa uma das variaveis de multiplos retornos
+		resp, _ := http.Get(site)
+
+		if resp.StatusCode == 200 {
+			fmt.Println("Sites:", site, " carregados com sucesso")
+		} else {
+			fmt.Println("Sites:", site, " problemas ao carregar. ", "Status Code",
+				resp.StatusCode)
+		}
+	}
 }
